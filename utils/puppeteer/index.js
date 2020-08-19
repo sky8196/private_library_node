@@ -7,7 +7,8 @@ const puppeteer = require('puppeteer'); //引入puppeteer库
 const getHotRecommend = async ()=>{
     try {
         const browser = await puppeteer.launch({
-            headless: true
+            headless: true,
+            args:['--no-sandbox'] // CentOS 下需要
         });
         const page = await browser.newPage();
         await page.goto('http://www.xbiquge.la/', { waitUntil: 'networkidle2' });
@@ -58,7 +59,8 @@ const getHotRecommend = async ()=>{
 const getArticleDetails = async (url='') => {
     try {
         const browser = await puppeteer.launch({
-            headless: true
+            headless: true,
+            args:['--no-sandbox']
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
@@ -85,7 +87,7 @@ const getArticleDetails = async (url='') => {
  */
 const getArticleCatalog = async (url = '') => {
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args:['--no-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
         await page.waitForSelector('#list');
@@ -125,7 +127,7 @@ const getArticleCatalog = async (url = '') => {
  */
 const getClassLatestUpdatesList = async (url = '') => {
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args:['--no-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
         await page.waitForSelector('#newscontent');
@@ -171,7 +173,7 @@ const getClassLatestUpdatesList = async (url = '') => {
  */
 const getClassNovels = async (url = '') => {
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args:['--no-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
         await page.waitForSelector('#newscontent');
