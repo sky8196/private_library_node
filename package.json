@@ -11,8 +11,13 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "ioredis": "^4.17.3",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "node-getmac": "^1.0.3",
     "puppeteer": "^4.0.0"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5"
   }
 }
