@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { getHotRecommend, getArticleDetails, getArticleCatalog, getClassNovels, getClassLatestUpdatesList } = require('../../utils/puppeteer');
+const { getHotRecommend, getArticleDetails, getArticleCatalog, getClassNovels, getClassLatestUpdatesList, getSearchData } = require('../../utils/puppeteer');
 
 /* API ROOT. */
 router.get('/', function(req, res, next) {
@@ -86,6 +86,25 @@ router.get('/latest_updates_list', async function(req, res, next) {
 
     res.send(send);
 })
+
+/* 搜索 */
+router.get('/search', async function(req,res,next) {
+    const { keywords = '' } = req.query;
+    let send = { status: 408, msg: '请求超时' };
+
+    if ( !keywords ) {
+        res.send({ status: 403, msg: "缺少必传参数" });
+        return ;
+    }
+
+    const result = await getSearchData(keywords);
+    if ( result ){
+        send = { status: 200, msg: result };
+    }
+
+    res.send(send);
+})
+
 
 
 module.exports = router;
