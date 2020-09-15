@@ -16,7 +16,8 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "node-getmac": "^1.0.3",
-    "puppeteer": "^4.0.0"
+    "puppeteer": "^4.0.0",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "cors": "^2.8.5",

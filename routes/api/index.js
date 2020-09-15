@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { getHotRecommend, getArticleDetails, getArticleCatalog, getClassNovels, getClassLatestUpdatesList, getSearchData } = require('../../utils/puppeteer');
-
-/* API ROOT. */
+const {} =
+/* API ROOT */
 router.get('/', function(req, res, next) {
     res.send('当前路径错误，请访问正确的路径');
 });
