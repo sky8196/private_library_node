@@ -16,7 +16,7 @@ const _createClient = () => {
 const redisClient = _createClient();
 
 // 设置redis
-const setRedis = (key,value, seconds=60*60) => {
+const setRedis = (key,value, seconds= 60*60) => {
     redisClient.set(key,value);
     // 设置过期时间
     if (seconds) {
