@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { getHotRecommend, getArticleDetails, getArticleCatalog, getClassNovels, getClassLatestUpdatesList, getSearchData } = require('../../utils/puppeteer');
-const {getRedis,setRedis} = require('../../utils/redis')
+const { getIndexData, getArticleDetails, getArticleCatalog, getClassNovels, getClassLatestUpdatesList, getSearchData } = require('../../../utils/puppeteer');
+const {getRedis,setRedis} = require('../../../utils/redis')
 /* API ROOT */
 router.get('/', function(req, res, next) {
     res.send('当前路径错误，请访问正确的路径');
 });
 
-/** 获取热门小说top4 */
-router.get('/hot_recommend', async function(req, res, next) {
+/** 获取首页数据 */
+router.get('/index_data', async function(req, res, next) {
     let send = { status: 408, msg: '请求超时' };
-    const redisRes = await getRedis('hot_recommend');
+    const redisRes = await getRedis('index_data');
     if (redisRes) {
-        send = { status: 200, msg: JSON.parse(redisRes) };
+        send = { status: 200, msg: '获取首页信息', data: JSON.parse(redisRes) };
     } else {
-        const result = await getHotRecommend();
+        const result = await getIndexData();
         if ( result ){
-            send = { status: 200, msg: result };
+            send = { status: 200, msg: '获取首页信息', data: result };
         }
-        setRedis('hot_recommend',JSON.stringify(result))
+        setRedis('index_data',JSON.stringify(result))
     }
     res.send(send);
 });
@@ -33,7 +33,7 @@ router.get('/article_details', async function(req, res, next) {
     }
     const result = await getArticleDetails(url);
     if ( result ){
-        send = { status: 200, msg: result };
+        send = { status: 200, msg: '获取文章详情', data: result };
     }
 
     res.send(send);
@@ -69,7 +69,7 @@ router.get('/class_novels', async function(req, res, next) {
 
     const result = await getClassNovels(url);
     if ( result ){
-        send = { status: 200, msg: result };
+        send = { status: 200, msg: '获取分类小说列表', data: result };
     }
 
     res.send(send);
@@ -87,13 +87,13 @@ router.get('/latest_updates_list', async function(req, res, next) {
 
     const result = await getClassLatestUpdatesList(url);
     if ( result ){
-        send = { status: 200, msg: result };
+        send = { status: 200, msg: '获取分类最新更新列表', data: result };
     }
 
     res.send(send);
 })
 
-/** 搜索 */
+/** 搜索结果 */
 router.get('/search', async function(req,res,next) {
     const { keywords = '' } = req.query;
     let send = { status: 408, msg: '请求超时' };
@@ -105,7 +105,7 @@ router.get('/search', async function(req,res,next) {
 
     const result = await getSearchData(keywords);
     if ( result ){
-        send = { status: 200, msg: result };
+        send = { status: 200, msg: '搜索结果', data: result };
     }
 
     res.send(send);

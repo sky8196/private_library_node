@@ -1,10 +1,10 @@
 const puppeteer = require('puppeteer'); //引入puppeteer库
 
 /**
- * HotRecommend 获取热门小说
+ * IndexData 获取首页数据
  * @returns {Promise<boolean|array>}
  */
-const getHotRecommend = async ()=>{
+const getIndexData = async ()=>{
     try {
         const browser = await puppeteer.launch({
             headless: true,
@@ -13,38 +13,59 @@ const getHotRecommend = async ()=>{
         const page = await browser.newPage();
         await page.goto('http://www.xbiquge.la/', { waitUntil: 'networkidle2' });
         await page.waitForSelector('#hotcontent .item');
-        let res = await page.evaluate(() => {
+
+        let indexData = await page.evaluate(() => {
             let $ = window.$;
-            let items = $('#hotcontent .item');
-            let lsArray = [];
-            let linkArray = [];
-            if (items.length >= 1) {
-                items.each((index, item) => {
+            // 热门小说
+            const hotRecommend = $('#hotcontent .item');
+            let hotRecommendList = [];
+            if (hotRecommend.length >= 1) {
+                hotRecommend.each((index, item) => {
                     let ele = $(item);
                     let link = ele.find('.image a').attr('href');
                     let image = ele.find('.image a img').attr('src');
                     let title = ele.find('dl a').text();
                     let abstract = ele.find('dl dd').text();
                     let author = ele.find('dl dt span').text();
-                    if ( linkArray.indexOf(link) === -1 ) {
-                        title = title.replace(/\s*/g,'');
-                        abstract = abstract.replace(/\s*/g,'');
-                        author = author.replace(/\s*/g,'');
-                        linkArray.push(link);
-                        lsArray.push({
-                            link,
-                            title,
-                            image,
-                            abstract,
-                            author
-                        })
-                    }
+                    hotRecommendList.push({
+                        link,
+                        title,
+                        image,
+                        abstract,
+                        author
+                    })
                 })
             }
-            return lsArray;
+
+            // 玄幻推荐
+            const  otherRecommend = $('.novelslist .content')
+            let otherRecommendList = []
+            if (otherRecommend.length >= 1) {
+                otherRecommend.each((index, item) => {
+                    let ele = $(item);
+                    const h2 = ele.find('h2').text()
+                    const topImage = ele.find('.top img').attr('src');
+                    const topTitle = ele.find('.top dl dt a').text();
+                    const topLink = ele.find('.top dl dt a').attr('href');
+                    const topAbstract = ele.find('.top dl dd').text();
+                    const other = ele.find('ul li');
+                    let otherList = [];
+                    other.each((index,item) => {
+                        const ele = $(item);
+                        const link = ele.find('a').attr('href');
+                        const title = ele.find('a').text();
+                        otherList.push({link,title});
+                    });
+                    otherRecommendList.push({
+                        h2,topAbstract,topImage,topLink,topTitle,otherList
+                    });
+                });
+            };
+            return {hotRecommendList,otherRecommendList};
         });
+
         await browser.close();  //关闭浏览器
-        return res;
+        return indexData;
     } catch (e) {
         console.log("error:",e.message);
         return false
@@ -264,7 +285,7 @@ const getSearchData = async (keywords = '') => {
 }
 
 module.exports = {
-    getHotRecommend,
+    getIndexData,
     getArticleDetails,
     getArticleCatalog,
     getClassLatestUpdatesList,
